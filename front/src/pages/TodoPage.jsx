@@ -1,11 +1,14 @@
-import styled from "styled-components";
+import styled from 'styled-components';
+import TodoItems from '../components/TodoItems.jsx';
+import { useContext } from 'react';
+import { DateContext } from '../contexts/DateContext.jsx';
 
 const TodoContainer = styled.div`
     flex: 1;
+    min-width: 0;
     border: 2px solid #000;
     border-radius: 8px;
     padding: 20px;
-    min-height: 400px;
 `;
 
 const TodoTitle = styled.h2`
@@ -15,31 +18,16 @@ const TodoTitle = styled.h2`
     margin-bottom: 20px;
 `;
 
-const TodoList = styled.ul`
-    list-style: none;
-    padding: 0;
-    margin: 0;
-`;
-
-const TodoItem = styled.li`
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-`;
 
 const TodoPage = () => {
+  const { selectedDate } = useContext(DateContext);
+  
   return (
-      <TodoContainer>
-        <TodoTitle>오늘 할 일</TodoTitle>
-        <TodoList>
-          <TodoItem>
-            이제 적을것
-          </TodoItem>
-        </TodoList>
-      </TodoContainer>
-  )
-}
+    <TodoContainer>
+      <TodoTitle>오늘 할 일</TodoTitle>
+      <TodoItems />
+    </TodoContainer>
+  );
+};
 
-export default TodoPage
+export default TodoPage;

@@ -1,16 +1,22 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import styled from 'styled-components';
 import DatePicker from 'react-datepicker';
 import { ko } from 'date-fns/locale';
 import 'react-datepicker/dist/react-datepicker.css';
-import DaysGrid from '../components/DaysGrid.jsx';
+import Days from '../components/Days.jsx';
+import { DateContext } from '../contexts/DateContext.jsx';
 
 const CalendarContainer = styled.div`
     flex: 2;
+    min-width: 0;
     border: 2px solid #000;
     border-radius: 8px;
     padding: 20px;
-    min-height: 400px;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 `;
 
 const SelectedDateDisplay = styled.div`
@@ -18,7 +24,6 @@ const SelectedDateDisplay = styled.div`
     font-weight: bold;
     text-align: center;
     margin-bottom: 20px;
-    cursor: pointer;
 `;
 
 const CalendarHeader = styled.div`
@@ -99,10 +104,12 @@ const DatePickerContainer = styled.div`
 `;
 
 const Calendar = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  //const [selectedDate, setSelectedDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+
+  const { selectedDate, setSelectedDate } = useContext(DateContext);
 
   const getDaysInMonth = (date) => {
     const year = date.getFullYear();
@@ -173,7 +180,7 @@ const Calendar = () => {
 
   return (
     <CalendarContainer>
-      <SelectedDateDisplay onClick={() => setShowDatePicker(true)}>
+      <SelectedDateDisplay>
         {selectedDate.getFullYear()}년 {selectedDate.getMonth() + 1}월 {selectedDate.getDate()}일
       </SelectedDateDisplay>
 
@@ -208,7 +215,7 @@ const Calendar = () => {
         ))}
       </WeekdayHeader>
 
-      <DaysGrid
+      <Days
         days={renderCalendar()}
         selectedDate={selectedDate}
         onDateClick={handleDateClick}

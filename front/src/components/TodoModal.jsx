@@ -73,8 +73,56 @@ const Button = styled.button`
     `}
 `;
 
+const ImportanceSelector = styled.div`
+    margin-bottom: 20px;
+`;
 
-const TodoModal = ({ isOpen, onClose, onSubmit, mode = 'create', initialData = null, title = '할 일 작성하기' }) => {
+const ImportanceLabel = styled.label`
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #666;
+`;
+
+const ImportanceInput = styled.input`
+    width: 100%;
+    height: 40px;
+    padding: 0;
+
+    &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 16px;
+        width: 16px;
+        border-radius: 50%;
+        background: #000;
+        cursor: pointer;
+        margin-top: -6px;
+    }
+
+    &::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 4px;
+        background: #ddd;
+        border-radius: 2px;
+    }
+`;
+
+const ImportanceValue = styled.div`
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    margin-top: 8px;
+`;
+
+const TodoModal = ({
+                     isOpen,
+                     onClose,
+                     onChange,
+                     onSubmit,
+                     mode = 'create',
+                     initialData = null,
+                     title = '할 일 작성하기',
+                   }) => {
 
   if (!isOpen) return null;
 
@@ -85,7 +133,25 @@ const TodoModal = ({ isOpen, onClose, onSubmit, mode = 'create', initialData = n
           <ModalTitle>{title}</ModalTitle>
         </ModalHeader>
 
-        <TextArea placeholder="할 일을 입력하세요..." defaultValue={initialData?.content || ''} />
+        <TextArea
+          placeholder="할 일을 입력하세요..."
+          defaultValue={initialData?.description || ''}
+          name="description"
+          onChange={onChange}
+        />
+
+        <ImportanceSelector>
+          <ImportanceLabel>중요도</ImportanceLabel>
+          <ImportanceInput
+            type="range"
+            min="1"
+            max="10"
+            defaultValue={initialData?.importance || '5'}
+            name="importance"
+            onChange={onChange}
+          />
+          <ImportanceValue>{initialData?.importance}</ImportanceValue>
+        </ImportanceSelector>
 
         <ButtonContainer>
           <Button onClick={onClose}>취소</Button>

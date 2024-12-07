@@ -3,6 +3,7 @@ import TodoItems from '../components/TodoItems.jsx';
 import { useContext, useState } from 'react';
 import { DateContext } from '../contexts/DateContext.jsx';
 import TodoModal from '../components/TodoModal.jsx';
+import { saveTodo } from '../api/todo.js';
 
 const TodoContainer = styled.div`
     flex: 1;
@@ -42,7 +43,10 @@ const WriteButton = styled.button`
 const initModalState = {
   isOpen: false,
   mode  : 'create',
-  data  : null,
+  data  : {
+    description: '',
+    importance : 5,
+  },
 };
 
 const TodoPage = () => {
@@ -53,7 +57,10 @@ const TodoPage = () => {
     setModalState({
       isOpen: true,
       mode  : 'create',
-      data  : null,
+      data  : {
+        description: '',
+        importance : 5,
+      },
     });
   };
 
@@ -65,19 +72,41 @@ const TodoPage = () => {
     });
   };
 
-  const handleClose = () => {
-    setModalState(prev => ({ ...prev, isOpen: false }));
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setModalState(prev => ({
+      ...prev,
+      data: {
+        ...prev.data,
+        [name]: value,
+      },
+    }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (modalState.mode === 'create') {
-      // 생성 시 할것
+      if (modalState.data.description.trim().length < 1) {
+        alert('내용을 입력해주세요.');
+        return;
+      }
+
+      const requestData = {
+        ...modalState.data,
+        importance: `L${modalState.data.importance}`,
+      };
+
+      const result = await saveTodo(requestData);
+      console.log('result', result);
     } else {
       // 수정 시 할것
 
     }
 
     handleClose();
+  };
+
+  const handleClose = () => {
+    setModalState(prev => ({ ...prev, isOpen: false }));
   };
 
   return (
@@ -94,6 +123,7 @@ const TodoPage = () => {
         mode={modalState.mode}
         initialData={modalState.data}
         onClose={handleClose}
+        onChange={handleChange}
         onSubmit={handleSubmit}
         title={modalState.mode === 'create' ? '약속하기' : '일구이언'}
       />

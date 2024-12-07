@@ -7,7 +7,7 @@ const TodoItemListContainer = styled.ul`
     margin: 0;
 `;
 
-const TodoItems = () => {
+const TodoItems = ({ handleEditClick }) => {
   return (
     <TodoItemListContainer>
       <TodoItem />

@@ -104,7 +104,6 @@ const DatePickerContainer = styled.div`
 `;
 
 const Calendar = () => {
-  //const [selectedDate, setSelectedDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const weekdays = ['일', '월', '화', '수', '목', '금', '토'];

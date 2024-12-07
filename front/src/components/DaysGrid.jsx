@@ -20,15 +20,15 @@ const DayCell = styled.div`
         border-right: none;
     }
 
-    ${props => props.isToday && `
+    ${props => props.$isToday && `
         background-color: #007bff;
         color: white;
     `}
-    ${props => props.isSelected && `
+    ${props => props.$isSelected && `
         background-color: #000;
         color: white;
     `}
-    ${props => props.isOtherMonth && `
+    ${props => props.$isOtherMonth && `
         color: #ccc;
     `}
     &:hover {
@@ -43,13 +43,13 @@ const DaysGrid = ({ days, selectedDate, onDateClick }) => {
       {days.map(dateObj => (
         <DayCell
           key={dateObj.date.getTime()}
-          isOtherMonth={dateObj.isOtherMonth}
-          isSelected={
+          $isOtherMonth={dateObj.isOtherMonth}
+          $isSelected={
             selectedDate.getDate() === dateObj.day &&
             selectedDate.getMonth() === dateObj.date.getMonth() &&
             selectedDate.getFullYear() === dateObj.date.getFullYear()
           }
-          isToday={
+          $isToday={
             new Date().getDate() === dateObj.day &&
             new Date().getMonth() === dateObj.date.getMonth() &&
             new Date().getFullYear() === dateObj.date.getFullYear()

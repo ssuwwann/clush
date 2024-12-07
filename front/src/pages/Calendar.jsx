@@ -58,7 +58,7 @@ const DatePickerOverlay = styled.div`
     right: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.5);
-    display: ${props => props.show ? 'flex' : 'none'};
+    display: ${props => props.$show ? 'flex' : 'none'};
     justify-content: center;
     align-items: center;
     z-index: 1000;
@@ -185,7 +185,7 @@ const Calendar = () => {
         <ArrowButton onClick={handleNextMonth}>&gt;</ArrowButton>
       </CalendarHeader>
 
-      <DatePickerOverlay show={showDatePicker} onClick={() => setShowDatePicker(false)}>
+      <DatePickerOverlay $show={showDatePicker} onClick={() => setShowDatePicker(false)}>
         <DatePickerContainer onClick={e => e.stopPropagation()}>
           <DatePicker
             selected={selectedDate}

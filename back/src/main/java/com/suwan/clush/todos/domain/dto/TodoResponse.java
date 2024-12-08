@@ -1,8 +1,7 @@
 package com.suwan.clush.todos.domain.dto;
 
 import com.suwan.clush.todos.domain.Importance;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 

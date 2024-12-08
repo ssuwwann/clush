@@ -12,7 +12,6 @@ const MainContainer = styled.main`
     gap: 20px;
     padding: 20px;
     box-sizing: border-box;
-    overflow: hidden;
 
     @media (min-width: 768px) {
         // 태블릿 이상에서는 가로 정렬

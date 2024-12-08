@@ -1,15 +1,16 @@
 package com.suwan.clush.todos.controller;
 
+import com.suwan.clush.todos.domain.dto.TodoPageResponse;
 import com.suwan.clush.todos.domain.dto.TodoRequest;
 import com.suwan.clush.todos.domain.dto.TodoResponse;
 import com.suwan.clush.todos.service.TodoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,9 +21,25 @@ public class TodoController {
   private final TodoService todoService;
 
   @PostMapping
-  public ResponseEntity<TodoResponse> saveTodo(@RequestBody TodoRequest request) {
-    TodoResponse todoResponse = todoService.insertTodo(request);
-    return ResponseEntity.ok(todoResponse);
+  public ResponseEntity<Void> saveTodo(@RequestBody TodoRequest request) {
+    todoService.insertTodo(request);
+    return ResponseEntity.ok().build();
   }
+
+  @GetMapping()
+  public ResponseEntity<TodoPageResponse> getTodos(
+          @RequestParam(required = false, defaultValue = "1", value = "page") int page,
+          @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+    TodoPageResponse todos = todoService.findTodosByDate(page - 1, date);
+    return ResponseEntity.ok(todos);
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<TodoResponse> getTodoById(@PathVariable Long id) {
+    TodoResponse todo = todoService.findTodoById(id);
+
+    return ResponseEntity.ok(todo);
+  }
+
 
 }

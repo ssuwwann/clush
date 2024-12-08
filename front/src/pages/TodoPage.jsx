@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import TodoItems from '../components/TodoItems.jsx';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { DateContext } from '../contexts/DateContext.jsx';
 import TodoModal from '../components/TodoModal.jsx';
-import { saveTodo } from '../api/todo.js';
+import { getTodos, saveTodo } from '../api/todo.js';
 
 const TodoContainer = styled.div`
     flex: 1;
@@ -51,7 +51,25 @@ const initModalState = {
 
 const TodoPage = () => {
   const [modalState, setModalState] = useState(initModalState);
+  const [todos, setTodos] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const { selectedDate } = useContext(DateContext);
+
+  useEffect(() => {
+    fetchTodos();
+  }, [selectedDate]);
+
+  const fetchTodos = async (page) => {
+    try {
+      const result = await getTodos(page, selectedDate);
+      setTodos(result.todos);
+      setTotalPages(result.totalPages);
+      setCurrentPage(result.currentPage);
+    } catch (error) {
+      console.log('Failed to fetch todos: ', error);
+    }
+  };
 
   const handleCreateClick = () => {
     setModalState({
@@ -95,14 +113,22 @@ const TodoPage = () => {
         importance: `L${modalState.data.importance}`,
       };
 
-      const result = await saveTodo(requestData);
-      console.log('result', result);
+      try {
+        await saveTodo(requestData);
+        fetchTodos(currentPage);
+      } catch (error) {
+        console.error('Failed to save todo: ', error);
+      }
     } else {
       // 수정 시 할것
 
     }
 
     handleClose();
+  };
+
+  const handlePageChange = (newPage) => {
+    fetchTodos(newPage);
   };
 
   const handleClose = () => {
@@ -116,7 +142,12 @@ const TodoPage = () => {
         <WriteButton onClick={handleCreateClick}>약속하기</WriteButton>
       </HeaderContainer>
 
-      <TodoItems onEditClick={handleEditClick} />
+      <TodoItems
+        todos={todos}
+        totalPages={totalPages}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+        onEditClick={handleEditClick} />
 
       <TodoModal
         isOpen={modalState.isOpen}

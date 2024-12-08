@@ -4,3 +4,15 @@ export const saveTodo = async (todoData) => {
   const response = await publicApi.post('/todos', todoData);
   return response.data;
 };
+
+export const getTodos = async (page = 1, selectedDate) => {
+  const formattedDate = selectedDate.toLocaleDateString('en-CA');
+  const response = await publicApi.get(`/todos?page=${page}&date=${formattedDate}`);
+  return response.data;
+};
+
+export const getTodo = async (id) => {
+  const response = await publicApi.get(`/${id}`);
+  return response.data;
+};
+

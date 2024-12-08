@@ -1,21 +1,27 @@
 import TodoItem from './TodoItem.jsx';
 import styled from 'styled-components';
 
-const TodoItemListContainer = styled.ul`
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+const TodoItemsContainer = styled.div`
+    display: grid;
+    grid-template-rows: 1fr auto;
+    height: calc(100% - 90px);
+`;
+
+const TodoItemsWrapper = styled.div`
+    display: grid;
+    grid-template-rows: repeat(5, 1fr); // 5개의 동일한 크기 row
+    gap: 14px;
 `;
 
 const PaginationContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 20px;
     gap: 8px;
+    padding: 12px 0;
+    margin-top: auto;
+    position: relative;
+    bottom: -15px;
 `;
 
 const PageButton = styled.button`
@@ -141,8 +147,8 @@ const TodoItems = ({ todos, totalPages, currentPage, onPageChange, onEditClick }
   };
 
   return (
-    <>
-      <TodoItemListContainer>
+    <TodoItemsContainer>
+      <TodoItemsWrapper>
         {todos.map(todo => (
           <TodoItem
             key={todo.id}
@@ -150,12 +156,12 @@ const TodoItems = ({ todos, totalPages, currentPage, onPageChange, onEditClick }
             onEditClick={() => onEditClick(todo)}
           />
         ))}
-      </TodoItemListContainer>
+      </TodoItemsWrapper>
 
       <PaginationContainer>
         {getPageButtons()}
       </PaginationContainer>
-    </>
+    </TodoItemsContainer>
   );
 };
 

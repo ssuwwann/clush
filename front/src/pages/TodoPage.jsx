@@ -7,7 +7,6 @@ import { getTodos, saveTodo } from '../api/todo.js';
 
 const TodoContainer = styled.div`
     flex: 1;
-    min-width: 0;
     border: 2px solid #000;
     border-radius: 8px;
     padding: 20px;

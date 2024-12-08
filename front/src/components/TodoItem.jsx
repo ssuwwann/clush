@@ -2,16 +2,17 @@ import styled from 'styled-components';
 import { useContext } from 'react';
 import { DateContext } from '../contexts/DateContext.jsx';
 
-
 const TodoItemContainer = styled.li`
-    padding: 16px 20px;
+    width: 100%;
+    height: 100%;
+    padding: 0 16px;
     border-radius: 12px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     background-color: #fff;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     transition: all 0.2s ease;
+    box-sizing: border-box;
 
     &:hover {
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -23,12 +24,16 @@ const ContentContainer = styled.div`
     align-items: center;
     gap: 12px;
     flex: 1;
+    overflow: hidden; // 내용이 넘치지 않도록
+    padding: 12px 0;
 `;
 
 const ImportanceIndicator = styled.div`
     width: 8px;
     height: 8px;
     border-radius: 50%;
+    margin-top: 8px; // 텍스트 첫 줄과 맞춤
+    flex-shrink: 0;
     background-color: ${props => {
         switch (props.$level) {
             case 1:
@@ -59,17 +64,27 @@ const ImportanceIndicator = styled.div`
 
 const TodoContent = styled.div`
     flex: 1;
+    min-width: 0; // text-overflow가 작동하기 위해 필요
 `;
 
 const TodoDescription = styled.p`
     margin: 0;
     font-size: 16px;
     color: #333;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; // 2줄로 제한
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
 `;
 
 const TodoDate = styled.span`
+    display: block;
     font-size: 12px;
     color: #999;
+    margin-top: 4px;
 `;
 
 const EditButton = styled.button`
@@ -82,6 +97,7 @@ const EditButton = styled.button`
     border-radius: 50%;
     background-color: transparent;
     cursor: pointer;
+    flex-shrink: 0;
     transition: background-color 0.2s ease;
 
     &:hover {

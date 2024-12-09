@@ -3,6 +3,7 @@ import reset from 'styled-reset';
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import { DateProvider } from './contexts/DateContext.jsx';
+import { TodoProvider } from './contexts/TodoContext.jsx';
 
 const GlobalStyle = createGlobalStyle`
     ${reset}
@@ -19,21 +20,23 @@ function App() {
   return (
     <BrowserRouter>
       <DateProvider>
-        <GlobalStyle />
+        <TodoProvider>
+          <GlobalStyle />
 
-        <Routes>
-          <Route path="/" element={
-            <Suspense fallback={<Loading />}>
-              <Outlet />
-            </Suspense>
-          } />
+          <Routes>
+            <Route path="/" element={
+              <Suspense fallback={<Loading />}>
+                <Outlet />
+              </Suspense>
+            } />
 
-          <Route index element={
-            <Suspense fallback={<Loading />}>
-              <MainPage />
-            </Suspense>
-          } />
-        </Routes>
+            <Route index element={
+              <Suspense fallback={<Loading />}>
+                <MainPage />
+              </Suspense>
+            } />
+          </Routes>
+        </TodoProvider>
       </DateProvider>
     </BrowserRouter>
   );

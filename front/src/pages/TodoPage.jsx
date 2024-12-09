@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 import TodoItems from '../components/TodoItems.jsx';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { DateContext } from '../contexts/DateContext.jsx';
 import TodoModal from '../components/TodoModal.jsx';
-import { deleteTodo, editComplete, editTodo, getTodos, saveTodo } from '../api/todo.js';
+import { deleteTodo, editComplete, editTodo, saveTodo } from '../api/todo.js';
+import { TodoContext } from '../contexts/TodoContext.jsx';
 
 const TodoContainer = styled.div`
     flex: 1;
@@ -50,25 +51,9 @@ const initModalState = {
 
 const TodoPage = () => {
   const [modalState, setModalState] = useState(initModalState);
-  const [todos, setTodos] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
-  const { selectedDate } = useContext(DateContext);
 
-  useEffect(() => {
-    fetchTodos();
-  }, [selectedDate]);
-
-  const fetchTodos = async (page) => {
-    try {
-      const result = await getTodos(page, selectedDate);
-      setTodos(result.todos);
-      setTotalPages(result.totalPages);
-      setCurrentPage(result.currentPage);
-    } catch (error) {
-      console.log('Failed to fetch todos: ', error);
-    }
-  };
+  const { todos, currentPage, totalPages, fetchTodos } = useContext(TodoContext);
+  const { selectedDate, formattedDate } = useContext(DateContext);
 
   const handleCreateClick = () => {
     setModalState({
@@ -110,6 +95,7 @@ const TodoPage = () => {
       const requestData = {
         ...modalState.data,
         importance: modalState.data.importance,
+        dueDate   : formattedDate,
       };
 
       try {

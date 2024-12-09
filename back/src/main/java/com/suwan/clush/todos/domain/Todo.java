@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Entity
@@ -34,6 +35,9 @@ public class Todo extends BaseEntity {
   private Importance importance = Importance.L1;
 
   @Column(nullable = false)
+  private LocalDate dueDate;
+
+  @Column(nullable = false)
   private boolean isCompleted = false;
 
   @Column(nullable = false)
@@ -44,6 +48,7 @@ public class Todo extends BaseEntity {
             .map(req -> Todo.builder()
                     .description(req.description())
                     .importance(req.importance())
+                    .dueDate(req.dueDate())
                     .build())
             .orElseThrow(() -> new IllegalArgumentException("TodoRequest cannot be null"));
   }
@@ -54,6 +59,7 @@ public class Todo extends BaseEntity {
     response.setDescription(this.description);
     response.setImportance(this.importance);
     response.setCompleted(this.isCompleted);
+    response.setDueDate(this.dueDate);
     response.setCreatedAt(this.getCreatedAt());
     response.setUpdatedAt(this.getUpdatedAt());
     return response;

@@ -5,6 +5,7 @@ import { ko } from 'date-fns/locale';
 import 'react-datepicker/dist/react-datepicker.css';
 import Days from '../components/Days.jsx';
 import { DateContext } from '../contexts/DateContext.jsx';
+import { TodoContext } from '../contexts/TodoContext.jsx';
 
 const CalendarContainer = styled.div`
     flex: 2;
@@ -109,60 +110,7 @@ const Calendar = () => {
   const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
 
   const { selectedDate, setSelectedDate } = useContext(DateContext);
-
-  const getDaysInMonth = (date) => {
-    const year = date.getFullYear();
-    const month = date.getMonth();
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const daysInMonth = lastDay.getDate();
-    const startingDay = firstDay.getDay();
-
-    return { daysInMonth, startingDay };
-  };
-
-  const renderCalendar = () => {
-    const { daysInMonth, startingDay } = getDaysInMonth(currentMonth);
-    const days = [];
-
-    // 이전 달의 마지막 날짜 계산
-    const prevMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 0);
-    const prevMonthDays = prevMonth.getDate();
-
-    // 이전 달의 날짜들
-    for (let i = startingDay - 1; i >= 0; i--) {
-      const day = prevMonthDays - i;
-      const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, day);
-      days.push({
-        day,
-        date,
-        isOtherMonth: true,
-      });
-    }
-
-    // 현재 달의 날짜들
-    for (let day = 1; day <= daysInMonth; day++) {
-      const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
-      days.push({
-        day,
-        date,
-        isOtherMonth: false,
-      });
-    }
-
-    // 다음 달의 날짜들
-    const remainingDays = 35 - days.length;
-    for (let day = 1; day <= remainingDays; day++) {
-      const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, day);
-      days.push({
-        day,
-        date,
-        isOtherMonth: true,
-      });
-    }
-
-    return days;
-  };
+  const { todos } = useContext(TodoContext);
 
   const handleDateClick = (dateObj) => {
     setSelectedDate(dateObj.date);
@@ -181,6 +129,7 @@ const Calendar = () => {
     <CalendarContainer>
       <SelectedDateDisplay>
         {selectedDate.getFullYear()}년 {selectedDate.getMonth() + 1}월 {selectedDate.getDate()}일
+        ({todos.length}개의 약속)
       </SelectedDateDisplay>
 
       <CalendarHeader>
@@ -215,7 +164,7 @@ const Calendar = () => {
       </WeekdayHeader>
 
       <Days
-        days={renderCalendar()}
+        currentMonth={currentMonth}
         selectedDate={selectedDate}
         onDateClick={handleDateClick}
       />

@@ -30,8 +30,8 @@ public class TodoController {
   @GetMapping()
   public ResponseEntity<TodoPageResponse> getTodos(
           @RequestParam(required = false, defaultValue = "1", value = "page") int page,
-          @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
-    TodoPageResponse todos = todoService.findTodosByDate(page - 1, date);
+          @RequestParam("due-date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dueDate) {
+    TodoPageResponse todos = todoService.findTodosByDate(page - 1, dueDate);
 
     return ResponseEntity.ok(todos);
   }

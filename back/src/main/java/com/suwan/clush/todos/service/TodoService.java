@@ -27,6 +27,7 @@ public class TodoService {
 
   public void insertTodo(TodoRequest request) {
     Todo todo = Todo.from(request);
+
     todoRepository.save(todo);
   }
 
@@ -42,22 +43,25 @@ public class TodoService {
     return TodoPageResponse.of(all);
   }
 
-  @Transactional(readOnly = true)
-  public TodoResponse findTodoById(Long id) {
-    Todo todo = todoRepository.findById(id).orElseThrow();
+  public boolean updateCompleteById(Long id) {
+    Todo todo = todoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("없는 글입니다."));
+    TodoResponse todoResponse = todo.toResponse();
+    todo.updateCompleted(todoResponse.isCompleted());
 
-    return todo.toResponse();
+    return todoResponse.isCompleted();
   }
 
   public TodoResponse updateTodoById(Long id, TodoRequest request) {
     Todo todo = todoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("없는 글입니다."));
-
     todo.update(request);
+
     return todo.toResponse();
   }
 
   public void deleteTodoById(Long id) {
     Todo todo = todoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("없는 글입니다."));
+
     todoRepository.delete(todo);
   }
+
 }

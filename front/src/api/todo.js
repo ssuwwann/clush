@@ -2,7 +2,7 @@ import { publicApi } from './custom-axios.js';
 
 export const saveTodo = async (todoData) => {
   const response = await publicApi.post('/todos', todoData);
-  return response.data;
+  return response;
 };
 
 export const getTodos = async (page = 1, selectedDate) => {
@@ -11,10 +11,17 @@ export const getTodos = async (page = 1, selectedDate) => {
   return response.data;
 };
 
-
 export const editTodo = async (id, editData) => {
-  console.log('id', id);
-  console.log('editData', editData);
   const response = await publicApi.put(`/todos/${id}`, editData);
   return response.data;
+};
+
+export const editComplete = async (id) => {
+  const response = await publicApi.get(`/todos/${id}`);
+  return response.data;
+};
+
+export const deleteTodo = async (id) => {
+  const response = await publicApi.delete(`/todos/${id}`);
+  return response;
 };

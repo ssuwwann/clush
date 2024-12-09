@@ -17,7 +17,7 @@ import java.util.Optional;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@SQLDelete(sql = "UPDATE todo t t.isDeleted = true WHERE t.id = ?")
+@SQLDelete(sql = "UPDATE todo t SET t.is_deleted = true WHERE t.id = ?")
 @SQLRestriction("is_deleted = false")
 public class Todo extends BaseEntity {
 
@@ -34,7 +34,7 @@ public class Todo extends BaseEntity {
   private Importance importance = Importance.L1;
 
   @Column(nullable = false)
-  private boolean completed = false;
+  private boolean isCompleted = false;
 
   @Column(nullable = false)
   private boolean isDeleted = false;
@@ -53,6 +53,7 @@ public class Todo extends BaseEntity {
     response.setId(this.id);
     response.setDescription(this.description);
     response.setImportance(this.importance);
+    response.setCompleted(this.isCompleted);
     response.setCreatedAt(this.getCreatedAt());
     response.setUpdatedAt(this.getUpdatedAt());
     return response;
@@ -63,11 +64,14 @@ public class Todo extends BaseEntity {
             .map(req -> {
               this.description = req.description();
               this.importance = req.importance();
-              this.completed = req.completed();
+              this.isCompleted = req.isCompleted();
               this.isDeleted = req.isDeleted();
               return this;
             })
             .orElseThrow(() -> new IllegalArgumentException("TodoRequest cannot be null"));
   }
 
+  public void updateCompleted(boolean isCompleted) {
+    this.isCompleted = !isCompleted;
+  }
 }

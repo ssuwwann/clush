@@ -23,6 +23,7 @@ public class TodoController {
   @PostMapping
   public ResponseEntity<Void> saveTodo(@RequestBody TodoRequest request) {
     todoService.insertTodo(request);
+
     return ResponseEntity.ok().build();
   }
 
@@ -31,25 +32,28 @@ public class TodoController {
           @RequestParam(required = false, defaultValue = "1", value = "page") int page,
           @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
     TodoPageResponse todos = todoService.findTodosByDate(page - 1, date);
+
     return ResponseEntity.ok(todos);
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<TodoResponse> getTodoById(@PathVariable Long id) {
-    TodoResponse todo = todoService.findTodoById(id);
+  public ResponseEntity<Boolean> editCompleteById(@PathVariable Long id) {
+    boolean result = todoService.updateCompleteById(id);
 
-    return ResponseEntity.ok(todo);
+    return ResponseEntity.ok(result);
   }
 
   @RequestMapping(path = "/{id}", method = {RequestMethod.PATCH, RequestMethod.PUT})
   public ResponseEntity<TodoResponse> editTodoById(@PathVariable Long id, @RequestBody TodoRequest request) {
     TodoResponse updateTodo = todoService.updateTodoById(id, request);
+
     return ResponseEntity.ok(updateTodo);
   }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> removeTodoById(@PathVariable Long id) {
     todoService.deleteTodoById(id);
+
     return ResponseEntity.ok().build();
   }
 }

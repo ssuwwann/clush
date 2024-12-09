@@ -63,7 +63,17 @@ const PageDots = styled.span`
     }
 `;
 
-const TodoItems = ({ todos, totalPages, currentPage, isOpen, onClose, onPageChange, onModalClick }) => {
+const TodoItems = ({
+                     todos,
+                     totalPages,
+                     currentPage,
+                     isOpen,
+                     onClose,
+                     onPageChange,
+                     onToggleComplete,
+                     onDelete,
+                     onModalClick,
+                   }) => {
   const getPageButtons = () => {
     const buttons = [];
     let startPage, endPage;
@@ -154,6 +164,8 @@ const TodoItems = ({ todos, totalPages, currentPage, isOpen, onClose, onPageChan
             key={todo.id}
             todo={todo}
             onModalClick={onModalClick}
+            onToggleComplete={onToggleComplete}
+            onDelete={onDelete}
             isOpen={isOpen}
             onClose={onClose}
           />

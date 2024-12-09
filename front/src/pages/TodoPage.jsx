@@ -3,7 +3,7 @@ import TodoItems from '../components/TodoItems.jsx';
 import { useContext, useEffect, useState } from 'react';
 import { DateContext } from '../contexts/DateContext.jsx';
 import TodoModal from '../components/TodoModal.jsx';
-import { editTodo, getTodos, saveTodo } from '../api/todo.js';
+import { deleteTodo, editComplete, editTodo, getTodos, saveTodo } from '../api/todo.js';
 
 const TodoContainer = styled.div`
     flex: 1;
@@ -81,19 +81,7 @@ const TodoPage = () => {
     });
   };
 
-  const handleEditClick = (todoData) => {
-    todoData.importance = todoData.importance.slice(1);
-
-    setModalState({
-      isOpen: true,
-      mode  : 'edit',
-      data  : todoData,
-    });
-  };
-
   const handleModal = (mode, data) => {
-    data.importance = data.importance.slice(1);
-
     setModalState({
       isOpen: true,
       mode,
@@ -121,27 +109,34 @@ const TodoPage = () => {
 
       const requestData = {
         ...modalState.data,
-        importance: `L${modalState.data.importance}`,
+        importance: modalState.data.importance,
       };
 
       try {
         if (modalState.mode === 'create') await saveTodo(requestData);
         else await editTodo(id, requestData);
-        
+
         fetchTodos(currentPage);
       } catch (error) {
         console.error('Failed to save todo: ', error);
       }
-    } else {
-      // 수정 시 할것
-
     }
 
     handleClose();
   };
 
-  const handlePageChange = (newPage) => {
-    fetchTodos(newPage);
+  const handlePageChange = async (newPage) => {
+    await fetchTodos(newPage);
+  };
+
+  const handleToggleComplete = async (id) => {
+    await editComplete(id);
+    await fetchTodos(currentPage);
+  };
+
+  const handleDelete = async (id) => {
+    await deleteTodo(id);
+    await fetchTodos(currentPage);
   };
 
   const handleClose = () => {
@@ -159,6 +154,8 @@ const TodoPage = () => {
         todos={todos}
         totalPages={totalPages}
         currentPage={currentPage}
+        onToggleComplete={handleToggleComplete}
+        onDelete={handleDelete}
         onPageChange={handlePageChange}
         onModalClick={handleModal} />
 

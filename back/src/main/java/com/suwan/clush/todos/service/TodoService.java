@@ -35,10 +35,7 @@ public class TodoService {
   public TodoPageResponse findTodosByDate(int page, LocalDate date) {
     PageRequest pageable = PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, "id"));
 
-    LocalDateTime startOfDay = date.atStartOfDay();
-    LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
-
-    Page<Todo> all = todoRepository.findAllByCreatedAtBetween(startOfDay, endOfDay, pageable);
+    Page<Todo> all = todoRepository.findAllByDueDateEquals(date, pageable);
 
     return TodoPageResponse.of(all);
   }

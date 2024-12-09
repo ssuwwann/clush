@@ -8,6 +8,8 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.util.Optional;
 
@@ -15,6 +17,8 @@ import java.util.Optional;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
+@SQLDelete(sql = "UPDATE todo t t.isDeleted = true WHERE t.id = ?")
+@SQLRestriction("is_deleted = false")
 public class Todo extends BaseEntity {
 
   @Id
@@ -28,6 +32,12 @@ public class Todo extends BaseEntity {
   @Enumerated(EnumType.STRING)
   @Builder.Default
   private Importance importance = Importance.L1;
+
+  @Column(nullable = false)
+  private boolean completed = false;
+
+  @Column(nullable = false)
+  private boolean isDeleted = false;
 
   public static Todo from(TodoRequest request) {
     return Optional.ofNullable(request)
@@ -46,6 +56,18 @@ public class Todo extends BaseEntity {
     response.setCreatedAt(this.getCreatedAt());
     response.setUpdatedAt(this.getUpdatedAt());
     return response;
+  }
+
+  public void update(TodoRequest request) {
+    Optional.ofNullable(request)
+            .map(req -> {
+              this.description = req.description();
+              this.importance = req.importance();
+              this.completed = req.completed();
+              this.isDeleted = req.isDeleted();
+              return this;
+            })
+            .orElseThrow(() -> new IllegalArgumentException("TodoRequest cannot be null"));
   }
 
 }

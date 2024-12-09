@@ -35,7 +35,6 @@ const Tag = styled.span`
     border: ${props => props.type === 'selected' ? '1px solid #000' : 'none'};
 `;
 
-
 const Day = ({ days, selectedDate, onDateClick }) => {
   return (
     <>
@@ -62,9 +61,6 @@ const Day = ({ days, selectedDate, onDateClick }) => {
             onClick={() => onDateClick(dateObj)}
           >
             {isToday && <Tag type="today">오늘</Tag>}
-            {selectedDate.getDate() === dateObj.day &&
-              selectedDate.getMonth() === dateObj.date.getMonth() &&
-              selectedDate.getFullYear() === dateObj.date.getFullYear() && <Tag type="selected">선택됨</Tag>}
             {dateObj.day}
           </DayCell>
         );

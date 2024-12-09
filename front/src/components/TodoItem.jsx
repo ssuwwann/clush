@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { useContext } from 'react';
 import { DateContext } from '../contexts/DateContext.jsx';
+import TodoModal from './TodoModal.jsx';
 
 const TodoItemContainer = styled.li`
     width: 100%;
@@ -105,20 +106,21 @@ const EditButton = styled.button`
     }
 `;
 
-const TodoItem = ({ todo, onEditClick }) => {
+const TodoItem = ({ todo, onModalClick }) => {
   const { selectedDate } = useContext(DateContext);
 
   return (
     <TodoItemContainer>
       <ContentContainer>
         <ImportanceIndicator $level={Number(todo.importance.substring(1))} />
-        <TodoContent>
+        <TodoContent onClick={() => onModalClick('view', todo)}>
           <TodoDescription>{todo.description}</TodoDescription>
           <TodoDate>{selectedDate.getFullYear()}년 {selectedDate.getMonth() + 1}월 {selectedDate.getDate()}일</TodoDate>
         </TodoContent>
 
-        <EditButton onClick={() => onEditClick(todo)}>✏️</EditButton>
+        <EditButton onClick={() => onModalClick('edit', todo)}>✏️</EditButton>
       </ContentContainer>
+
     </TodoItemContainer>
   );
 };

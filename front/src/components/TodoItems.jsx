@@ -63,7 +63,7 @@ const PageDots = styled.span`
     }
 `;
 
-const TodoItems = ({ todos, totalPages, currentPage, onPageChange, onEditClick }) => {
+const TodoItems = ({ todos, totalPages, currentPage, isOpen, onClose, onPageChange, onModalClick }) => {
   const getPageButtons = () => {
     const buttons = [];
     let startPage, endPage;
@@ -153,7 +153,9 @@ const TodoItems = ({ todos, totalPages, currentPage, onPageChange, onEditClick }
           <TodoItem
             key={todo.id}
             todo={todo}
-            onEditClick={() => onEditClick(todo)}
+            onModalClick={onModalClick}
+            isOpen={isOpen}
+            onClose={onClose}
           />
         ))}
       </TodoItemsWrapper>

@@ -32,7 +32,7 @@ public class TodoService {
 
   @Transactional(readOnly = true)
   public TodoPageResponse findTodosByDate(int page, LocalDate date) {
-    PageRequest pageable = PageRequest.of(page, 5, Sort.by(Sort.Direction.ASC, "id"));
+    PageRequest pageable = PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, "id"));
 
     LocalDateTime startOfDay = date.atStartOfDay();
     LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
@@ -47,5 +47,17 @@ public class TodoService {
     Todo todo = todoRepository.findById(id).orElseThrow();
 
     return todo.toResponse();
+  }
+
+  public TodoResponse updateTodoById(Long id, TodoRequest request) {
+    Todo todo = todoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("없는 글입니다."));
+
+    todo.update(request);
+    return todo.toResponse();
+  }
+
+  public void deleteTodoById(Long id) {
+    Todo todo = todoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("없는 글입니다."));
+    todoRepository.delete(todo);
   }
 }

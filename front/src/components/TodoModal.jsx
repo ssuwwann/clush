@@ -126,12 +126,6 @@ const TodoModal = ({
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    onSubmit();
-  };
-
   return (
     <ModalOverlay onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
@@ -139,34 +133,46 @@ const TodoModal = ({
           <ModalTitle>{title}</ModalTitle>
         </ModalHeader>
 
-        <form onSubmit={handleSubmit}>
-          <TextArea
-            placeholder="할 일을 입력하세요..."
-            defaultValue={initialData?.description || ''}
-            name="description"
-            onChange={onChange}
-          />
+        <TextArea
+          placeholder="할 일을 입력하세요..."
+          defaultValue={initialData?.description || ''}
+          name="description"
+          onChange={onChange}
+          disabled={mode === 'view'}
+        />
 
-          <ImportanceSelector>
-            <ImportanceLabel>중요도</ImportanceLabel>
-            <ImportanceInput
-              type="range"
-              min="1"
-              max="10"
-              defaultValue={initialData?.importance || '5'}
-              name="importance"
-              onChange={onChange}
-            />
-            <ImportanceValue>{initialData?.importance}</ImportanceValue>
-          </ImportanceSelector>
+        {mode === 'view' ? <></> : (
+          <>
+            <ImportanceSelector>
+              <ImportanceLabel>중요도</ImportanceLabel>
+              <ImportanceInput
+                type="range"
+                min="1"
+                max="10"
+                defaultValue={initialData?.importance || '5'}
+                name="importance"
+                onChange={onChange}
+              />
+              <ImportanceValue>{initialData?.importance}</ImportanceValue>
+            </ImportanceSelector>
 
-          <ButtonContainer>
-            <Button onClick={onClose}>취소</Button>
-            <Button $primary onClick={onSubmit}>
-              {mode === 'create' ? '등록' : '수정'}
-            </Button>
-          </ButtonContainer>
-        </form>
+            <ButtonContainer>
+              {mode === 'view' ? (<></>) :
+                mode === 'create' ? (
+                  <>
+                    <Button onClick={onClose}>취소</Button>
+                    <Button onClick={onSubmit} $primary>등록</Button>
+                  </>
+                ) : (
+                  <>
+                    <Button onClick={onClose}>취소</Button>
+                    <Button onClick={() => onSubmit(initialData.id)} $primary>수정</Button>
+                  </>
+                )}
+            </ButtonContainer>
+          </>
+        )}
+
       </ModalContent>
     </ModalOverlay>
   );

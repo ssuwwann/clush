@@ -3,7 +3,7 @@ import TodoItems from '../components/TodoItems.jsx';
 import { useContext, useEffect, useState } from 'react';
 import { DateContext } from '../contexts/DateContext.jsx';
 import TodoModal from '../components/TodoModal.jsx';
-import { getTodos, saveTodo } from '../api/todo.js';
+import { editTodo, getTodos, saveTodo } from '../api/todo.js';
 
 const TodoContainer = styled.div`
     flex: 1;
@@ -82,10 +82,22 @@ const TodoPage = () => {
   };
 
   const handleEditClick = (todoData) => {
+    todoData.importance = todoData.importance.slice(1);
+
     setModalState({
       isOpen: true,
       mode  : 'edit',
       data  : todoData,
+    });
+  };
+
+  const handleModal = (mode, data) => {
+    data.importance = data.importance.slice(1);
+
+    setModalState({
+      isOpen: true,
+      mode,
+      data,
     });
   };
 
@@ -100,8 +112,8 @@ const TodoPage = () => {
     }));
   };
 
-  const handleSubmit = async () => {
-    if (modalState.mode === 'create') {
+  const handleSubmit = async (id) => {
+    if (modalState.mode === 'create' || modalState.mode === 'edit') {
       if (modalState.data.description.trim().length < 1) {
         alert('내용을 입력해주세요.');
         return;
@@ -113,7 +125,9 @@ const TodoPage = () => {
       };
 
       try {
-        await saveTodo(requestData);
+        if (modalState.mode === 'create') await saveTodo(requestData);
+        else await editTodo(id, requestData);
+        
         fetchTodos(currentPage);
       } catch (error) {
         console.error('Failed to save todo: ', error);
@@ -146,7 +160,7 @@ const TodoPage = () => {
         totalPages={totalPages}
         currentPage={currentPage}
         onPageChange={handlePageChange}
-        onEditClick={handleEditClick} />
+        onModalClick={handleModal} />
 
       <TodoModal
         isOpen={modalState.isOpen}
@@ -155,7 +169,7 @@ const TodoPage = () => {
         onClose={handleClose}
         onChange={handleChange}
         onSubmit={handleSubmit}
-        title={modalState.mode === 'create' ? '약속하기' : '일구이언'}
+        title="보기"
       />
     </TodoContainer>
   );

@@ -11,8 +11,10 @@ export const getTodos = async (page = 1, selectedDate) => {
   return response.data;
 };
 
-export const getTodo = async (id) => {
-  const response = await publicApi.get(`/${id}`);
+
+export const editTodo = async (id, editData) => {
+  console.log('id', id);
+  console.log('editData', editData);
+  const response = await publicApi.put(`/todos/${id}`, editData);
   return response.data;
 };
-

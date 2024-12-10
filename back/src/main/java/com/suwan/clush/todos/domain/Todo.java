@@ -4,10 +4,7 @@ import com.suwan.clush.common.BaseEntity;
 import com.suwan.clush.todos.domain.dto.TodoRequest;
 import com.suwan.clush.todos.domain.dto.TodoResponse;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -17,6 +14,7 @@ import java.util.Optional;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Getter
 @Builder
 @SQLDelete(sql = "UPDATE todo t SET t.is_deleted = true WHERE t.id = ?")
 @SQLRestriction("is_deleted = false")
@@ -38,9 +36,11 @@ public class Todo extends BaseEntity {
   private LocalDate dueDate;
 
   @Column(nullable = false)
+  @Builder.Default
   private boolean isCompleted = false;
 
   @Column(nullable = false)
+  @Builder.Default
   private boolean isDeleted = false;
 
   public static Todo from(TodoRequest request) {
@@ -71,13 +71,12 @@ public class Todo extends BaseEntity {
               this.description = req.description();
               this.importance = req.importance();
               this.isCompleted = req.isCompleted();
-              this.isDeleted = req.isDeleted();
               return this;
             })
             .orElseThrow(() -> new IllegalArgumentException("TodoRequest cannot be null"));
   }
 
-  public void updateCompleted(boolean isCompleted) {
+  public void updateCompleted() {
     this.isCompleted = !isCompleted;
   }
 }

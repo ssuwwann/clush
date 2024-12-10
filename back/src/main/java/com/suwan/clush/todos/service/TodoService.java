@@ -42,10 +42,9 @@ public class TodoService {
 
   public boolean updateCompleteById(Long id) {
     Todo todo = todoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("없는 글입니다."));
-    TodoResponse todoResponse = todo.toResponse();
-    todo.updateCompleted(todoResponse.isCompleted());
+    todo.updateCompleted();
 
-    return todoResponse.isCompleted();
+    return todo.isCompleted();
   }
 
   public TodoResponse updateTodoById(Long id, TodoRequest request) {

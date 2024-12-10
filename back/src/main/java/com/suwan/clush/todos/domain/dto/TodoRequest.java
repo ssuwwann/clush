@@ -7,8 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 
 public record TodoRequest(String description, Importance importance,
-                          @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dueDate, boolean isCompleted,
-                          boolean isDeleted) {
+                          @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dueDate, boolean isCompleted) {
   @Builder
   public TodoRequest {
   }

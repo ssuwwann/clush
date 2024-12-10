@@ -26,7 +26,7 @@
 git clone https://github.com/ssuwwann/clush.git
 
 # 2. 프로젝트 디렉토리로 이동
-cd [project directory]
+cd [project directory/clush/front]
 
 # 3. 의존성 설치
 yarn install || npm install
@@ -63,7 +63,7 @@ yarn dev || npm run dev
 
 ### 기술 스택
 
-- Java 17
+- Java 21
 - Spring Boot 3
 - MySQL 8.0
 - Gradle
@@ -108,13 +108,14 @@ spring:
 git clone https://github.com/ssuwwann/clush.git
 
 # 2. 프로젝트 디렉토리로 이동
-cd [project directory]
+cd [project directory/clush/back]
 
 # 3. 프로젝트 빌드
+cd [project directory/clush/back]
 ./gradlew build
 
 # 4. 애플리케이션 실행
-java -jar build/libs/clush-0.0.1-SNAPSHOT.jar
+java -jar build/libs/back-0.0.1-SNAPSHOT.jar
 ```
 
 주의: DatabaseInitializer가 mysql 설정으로 DB와 사용자 계정을 자동 생성합니다. Spring Boot의 datasource 설정도 필요하며, 두 설정이 모두 있어야 애플리케이션이 실행됩니다.
@@ -167,7 +168,8 @@ Swagger UI 주소: http://localhost:8080/swagger-ui/index.html
 
 ```bash
 # 전체 테스트 실행
-./gradlew test
+cd [project directory/clush/back]
+gradlew test
 ```
 
 **구현된 테스트:**
@@ -178,8 +180,7 @@ Swagger UI 주소: http://localhost:8080/swagger-ui/index.html
 
 ### 데이터베이스 스키마
 
-![img_1.png](img_1.png)
-![img.png](img.png)
+![img_1.png](img_1.png)![img.png](img.png)
 
 ```sql
 CREATE TABLE todos

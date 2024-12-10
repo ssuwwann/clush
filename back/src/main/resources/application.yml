@@ -3,10 +3,13 @@ spring:
     active: local
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     generate-ddl: true
     show-sql: true
-
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
 
 # Swagger
 springdoc:

@@ -57,7 +57,7 @@ public class Todo extends BaseEntity {
     TodoResponse response = new TodoResponse();
     response.setId(this.id);
     response.setDescription(this.description);
-    response.setImportance(this.importance);
+    response.setImportance(this.importance.getValue());
     response.setCompleted(this.isCompleted);
     response.setDueDate(this.dueDate);
     response.setCreatedAt(this.getCreatedAt());

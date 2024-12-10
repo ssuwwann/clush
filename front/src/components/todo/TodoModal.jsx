@@ -97,7 +97,7 @@ const TodoModal = ({
     <BaseModal isOpen={isOpen} onClose={onClose} title={title} width="500px">
       <TextArea
         placeholder="약속하세요."
-        defaultValue={initialData?.description || ''}
+        value={initialData?.description || ''}
         name="description"
         onChange={onChange}
         disabled={mode === 'view'}
@@ -109,13 +109,13 @@ const TodoModal = ({
             <ImportanceLabel>중요도</ImportanceLabel>
             <ImportanceInput
               type="range"
-              min="1"
-              max="10"
-              defaultValue={initialData?.importance || '5'}
+              min="0"
+              max="9"
+              value={initialData?.importance || '5'}
               name="importance"
               onChange={onChange}
             />
-            <ImportanceValue>{initialData?.importance}</ImportanceValue>
+            <ImportanceValue>{Number(initialData?.importance) + 1}</ImportanceValue>
           </ImportanceSelector>
 
           <ButtonContainer>

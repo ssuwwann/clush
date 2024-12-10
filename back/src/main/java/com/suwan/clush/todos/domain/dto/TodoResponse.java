@@ -1,7 +1,7 @@
 package com.suwan.clush.todos.domain.dto;
 
-import com.suwan.clush.todos.domain.Importance;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,7 +12,7 @@ public class TodoResponse {
 
   private Long id;
   private String description;
-  private Importance importance;
+  private int importance;
   private boolean isCompleted;
   private LocalDate dueDate;
   private LocalDateTime createdAt;

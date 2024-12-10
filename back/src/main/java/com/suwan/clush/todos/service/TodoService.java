@@ -14,8 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.temporal.TemporalAdjusters;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -58,6 +59,29 @@ public class TodoService {
     Todo todo = todoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("없는 글입니다."));
 
     todoRepository.delete(todo);
+  }
+
+  public List<TodoResponse> findTodosByDateAndPeriod(LocalDate date, String period) {
+    LocalDate startDate;
+    LocalDate endDate;
+
+    switch (period.toLowerCase()) {
+      case "daily" -> {
+        startDate = date;
+        endDate = date;
+      }
+
+      case "monthly" -> {
+        startDate = date.withDayOfMonth(1);
+        endDate = date.with(TemporalAdjusters.lastDayOfMonth());
+      }
+      default -> throw new IllegalArgumentException("Unsupported period: " + period);
+    }
+
+    return todoRepository.findAllByDueDateBetweenOrderByDueDateDesc(startDate, endDate)
+            .stream()
+            .map(Todo::toResponse)
+            .collect(Collectors.toList());
   }
 
 }

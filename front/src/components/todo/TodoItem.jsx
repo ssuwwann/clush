@@ -182,8 +182,7 @@ const TodoItem = ({ todo, onModalClick, onToggleComplete, onDelete }) => {
     }
   };
 
-  const importanceLevel = Number(todo.importance.substring(1));
-  const importanceColor = getImportanceColor(importanceLevel);
+  const importanceColor = getImportanceColor(todo.importance);
 
   return (
     <TodoItemContainer>
@@ -196,7 +195,7 @@ const TodoItem = ({ todo, onModalClick, onToggleComplete, onDelete }) => {
           />
           <StyledCheckbox
             checked={todo.completed}
-            $level={importanceLevel}
+            $level={todo.importance}
             $color={importanceColor}
           />
         </CustomCheckboxContainer>

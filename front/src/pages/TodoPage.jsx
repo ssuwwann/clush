@@ -36,9 +36,9 @@ const HeaderActions = styled.div`
 
 const WriteButton = styled.button`
     padding: 8px 16px;
-    background-color: #000;
-    color: #fff;
-    border: none;
+    background-color: ${props => props.$dark ? '#000' : '#fff'};
+    color: ${props => props.$dark ? '#fff' : '#000'};
+    border: ${props => props.$dark ? 'none' : '1px solid black'};
     border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
@@ -53,21 +53,19 @@ const initModalState = {
   mode  : 'create',
   data  : {
     description: '',
-    importance : 5,
+    importance : 4,
   },
 };
 
 const TodoPage = () => {
   const [modalState, setModalState] = useState(initModalState);
   const [exportModalOpen, setExportModalOpen] = useState(false);
-  const [isExporting, setIsExporting] = useState(false);
 
   const { todos, currentPage, totalPages, fetchTodos } = useContext(TodoContext);
   const { selectedDate, formattedDate } = useContext(DateContext);
 
   const handleExport = async (type, period) => {
     try {
-      setIsExporting(true);
 
       const params = new URLSearchParams({
         type,
@@ -77,9 +75,12 @@ const TodoPage = () => {
 
       const result = await todoExport(params);
       const filename = result.headers.get('Content-Disposition')?.split('filename=')[1] ||
-        `calendar-${period}-${type}-${formattedDate}.${type === 'excel' ? 'xlsx' : 'pdf'}`;
-
-      const blob = await response.data.blob();
+        `export-${period}-${type}-${formattedDate}.${type === 'excel' ? 'xlsx' : 'pdf'}`;
+      const blob = new Blob([result.data], {
+        type: type === 'excel' ?
+          'application/vnd.openxml formats-officedocument.spreadsheetml.sheet' :
+          'application/pdf',
+      });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
 
@@ -90,9 +91,7 @@ const TodoPage = () => {
       link.remove();
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Failed to exporting: ', error);
-    } finally {
-      setIsExporting(false);
+      console.error('Failed to export: ', error);
     }
   };
 
@@ -105,17 +104,18 @@ const TodoPage = () => {
   };
 
   const handleCreateClick = () => {
-    setModalState({
+    setModalState(prev => ({
+      ...prev,
       isOpen: true,
       mode  : 'create',
-      data  : {
-        description: '',
-        importance : 5,
-      },
-    });
+    }));
   };
 
   const handleExportClick = () => {
+    if (todos.length < 1) {
+      alert('공유할 약속이 없습니다.');
+      return;
+    }
     setExportModalOpen(true);
   };
 
@@ -184,8 +184,8 @@ const TodoPage = () => {
         <TodoTitle>{selectedDate.getFullYear()}년 {selectedDate.getMonth() + 1}월 {selectedDate.getDate()}일</TodoTitle>
 
         <HeaderActions>
-          <WriteButton onClick={handleExportClick}>공유하기</WriteButton>
-          <WriteButton onClick={handleCreateClick}>약속하기</WriteButton>
+          <WriteButton onClick={handleExportClick}>내보내기</WriteButton>
+          <WriteButton onClick={handleCreateClick} $dark>약속하기</WriteButton>
         </HeaderActions>
       </HeaderContainer>
 

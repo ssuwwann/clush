@@ -178,6 +178,9 @@ Swagger UI 주소: http://localhost:8080/swagger-ui/index.html
 
 ### 데이터베이스 스키마
 
+![img_1.png](img_1.png)
+![img.png](img.png)
+
 ```sql
 CREATE TABLE todos
 (

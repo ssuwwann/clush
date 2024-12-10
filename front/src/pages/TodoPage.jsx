@@ -1,10 +1,12 @@
 import styled from 'styled-components';
-import TodoItems from '../components/TodoItems.jsx';
+import TodoItems from '../components/todo/TodoItems.jsx';
 import { useContext, useState } from 'react';
-import { DateContext } from '../contexts/DateContext.jsx';
-import TodoModal from '../components/TodoModal.jsx';
+import TodoModal from '../components/todo/TodoModal.jsx';
 import { deleteTodo, editComplete, editTodo, saveTodo } from '../api/todo.js';
+import { todoExport } from '../api/export.js';
+import ExportModal from '../components/calendar/ExportModal.jsx';
 import { TodoContext } from '../contexts/TodoContext.jsx';
+import { DateContext } from '../contexts/DateContext.jsx';
 
 const TodoContainer = styled.div`
     flex: 1;
@@ -24,6 +26,12 @@ const HeaderContainer = styled.div`
 
 const TodoTitle = styled.h2`
     margin: 0
+`;
+
+const HeaderActions = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 16px;
 `;
 
 const WriteButton = styled.button`
@@ -51,9 +59,50 @@ const initModalState = {
 
 const TodoPage = () => {
   const [modalState, setModalState] = useState(initModalState);
+  const [exportModalOpen, setExportModalOpen] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
 
   const { todos, currentPage, totalPages, fetchTodos } = useContext(TodoContext);
   const { selectedDate, formattedDate } = useContext(DateContext);
+
+  const handleExport = async (type, period) => {
+    try {
+      setIsExporting(true);
+
+      const params = new URLSearchParams({
+        type,
+        period,
+        date: formattedDate,
+      });
+
+      const result = await todoExport(params);
+      const filename = result.headers.get('Content-Disposition')?.split('filename=')[1] ||
+        `calendar-${period}-${type}-${formattedDate}.${type === 'excel' ? 'xlsx' : 'pdf'}`;
+
+      const blob = await response.data.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Failed to exporting: ', error);
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const handleModal = (mode, data) => {
+    setModalState({
+      isOpen: true,
+      mode,
+      data,
+    });
+  };
 
   const handleCreateClick = () => {
     setModalState({
@@ -66,12 +115,12 @@ const TodoPage = () => {
     });
   };
 
-  const handleModal = (mode, data) => {
-    setModalState({
-      isOpen: true,
-      mode,
-      data,
-    });
+  const handleExportClick = () => {
+    setExportModalOpen(true);
+  };
+
+  const handleExportModalClose = () => {
+    setExportModalOpen(false);
   };
 
   const handleChange = (e) => {
@@ -133,7 +182,11 @@ const TodoPage = () => {
     <TodoContainer>
       <HeaderContainer>
         <TodoTitle>{selectedDate.getFullYear()}년 {selectedDate.getMonth() + 1}월 {selectedDate.getDate()}일</TodoTitle>
-        <WriteButton onClick={handleCreateClick}>약속하기</WriteButton>
+
+        <HeaderActions>
+          <WriteButton onClick={handleExportClick}>공유하기</WriteButton>
+          <WriteButton onClick={handleCreateClick}>약속하기</WriteButton>
+        </HeaderActions>
       </HeaderContainer>
 
       <TodoItems
@@ -153,6 +206,12 @@ const TodoPage = () => {
         onChange={handleChange}
         onSubmit={handleSubmit}
         title="보기"
+      />
+
+      <ExportModal
+        isOpen={exportModalOpen}
+        onClose={handleExportModalClose}
+        onExport={handleExport}
       />
     </TodoContainer>
   );

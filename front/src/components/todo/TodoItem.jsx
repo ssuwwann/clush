@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useContext } from 'react';
-import { DateContext } from '../contexts/DateContext.jsx';
 import { FaEdit, FaTrashAlt } from 'react-icons/fa';
+import { DateContext } from '../../contexts/DateContext.jsx';
 
 const TodoItemContainer = styled.li`
     width: 100%;
@@ -184,7 +184,7 @@ const TodoItem = ({ todo, onModalClick, onToggleComplete, onDelete }) => {
 
   const importanceLevel = Number(todo.importance.substring(1));
   const importanceColor = getImportanceColor(importanceLevel);
-  
+
   return (
     <TodoItemContainer>
       <ContentContainer>

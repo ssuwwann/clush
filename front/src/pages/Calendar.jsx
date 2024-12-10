@@ -3,9 +3,9 @@ import styled from 'styled-components';
 import DatePicker from 'react-datepicker';
 import { ko } from 'date-fns/locale';
 import 'react-datepicker/dist/react-datepicker.css';
-import Days from '../components/Days.jsx';
 import { DateContext } from '../contexts/DateContext.jsx';
 import { TodoContext } from '../contexts/TodoContext.jsx';
+import Days from '../components/calendar/Days.jsx';
 
 const CalendarContainer = styled.div`
     flex: 2;
@@ -107,6 +107,7 @@ const DatePickerContainer = styled.div`
 const Calendar = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date());
+
   const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
 
   const { selectedDate, setSelectedDate } = useContext(DateContext);

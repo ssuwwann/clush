@@ -19,15 +19,19 @@ public class DatabaseInitializer implements CommandLineRunner {
 
   @Value("${mysql.username}")
   private String username;
+
   @Value("${mysql.password}")
   private String password;
+
+  @Value("${mysql.url}")
+  private String mysqlUrl;
 
   @Override
   public void run(String... args) throws Exception {
 
     // root 계정으로 임시 db source 생성
     DataSource rootDataSource = DataSourceBuilder.create()
-            .url(primaryProperties.getUrl())
+            .url(mysqlUrl)
             .username(username)
             .password(password)
             .build();

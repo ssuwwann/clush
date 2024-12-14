@@ -76,7 +76,7 @@ yarn dev || npm run dev
 
 #### 필요 환경
 
-- JDK 17 이상
+- JDK 21 이상
 - MySQL 8.0 이상
 - Gradle 7.6 이상
 
